@@ -4,7 +4,7 @@ Et verktøy for automatisk vurdering av elevbesvarelser basert på kompetansemå
 
 ## Om Prosjektet
 
-Dette er en prototype på et vurderingsverktøy som bruker GPT-4 for å analysere og vurdere elevbesvarelser. Systemet integrerer kompetansemål fra UDIR for å gi konsistente vurderinger.
+Dette er en prototype på et vurderingsverktøy som bruker GPT-4o-mini og GPT-4o for å analysere og vurdere elevbesvarelser. Systemet integrerer kompetansemål fra UDIR for å gi konsistente vurderinger.
 
 ### Nåværende Funksjoner
 
@@ -12,11 +12,11 @@ Dette er en prototype på et vurderingsverktøy som bruker GPT-4 for å analyser
   - Klassetrinn (8-10, VG1-3)
   - Fag
 - Automatisk lasting av relevante kompetansemål fra UDIR
-- GPT-4 basert vurdering som returnerer:
+- GPT-4o basert vurdering som returnerer:
   - Karakter
   - Begrunnelse
   - Elevtilbakemelding
-- Excel-eksport av vurderinger
+- Excel-eksport av vurderinger med grafisk fremstilling av karakterdistribusjon
 
 ### Planlagte Funksjoner
 
@@ -48,8 +48,8 @@ Dette er en prototype på et vurderingsverktøy som bruker GPT-4 for å analyser
 ### Dataflyt
 
 1. Brukervalg → lasting av kompetansemål
-2. Elevbesvarelse + kompetansemål → GPT-4
-3. GPT-4 output → JSON formattering
+2. Elevbesvarelse + kompetansemål → GPT-4o
+3. GPT-4o output → JSON formattering
 4. JSON → Excel-generering
 
 ## Testing og Validering

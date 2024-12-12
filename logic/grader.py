@@ -2,13 +2,19 @@ import openai
 import json
 import os
 import logging
+from dotenv import load_dotenv
 from logic.prompt_handler import load_prompt, prepare_prompt
+
+# Load the environment variables from .env
+load_dotenv()
 
 # Set logging level to DEBUG
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-openai.api_key = os.getenv("OPENAI_API_KEY", "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")
+# Get the API key from the environment
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
 
 def grade_answer(student_answer: str, curriculum_context: str):
     prompt_template = load_prompt()

@@ -1,0 +1,11 @@
+runtime: python310
+entrypoint: gunicorn -b :$PORT app:app
+
+handlers:
+  # Serve static files from the "static" directory.
+  - url: /static
+    static_dir: static
+
+  # Catch all handler: route all other URLs to our Flask app.
+  - url: /.*
+    script: auto

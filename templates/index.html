@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Automatisk vurderingsverktøy">
+<title>Automatisk Vurdering</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<style>
+body {
+  background: #f8f9fa;
+}
+.hero-section {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  /* Reduced padding from 3rem 0 to 1.5rem 0 */
+  padding: 1.5rem 0; 
+}
+.hero-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0d6efd;
+}
+.hero-text {
+  font-size: 1rem;
+  color: #495057;
+}
+.card {
+  border: none;
+  border-radius: 0.5rem;
+}
+h1, h2, h3, h4 {
+  font-weight: 600;
+}
+.btn-primary {
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+}
+.btn-primary:hover {
+  background-color: #0b5ed7;
+}
+@keyframes loadProgress {
+  0% { width: 0%; }
+  50% { width: 100%; }
+  100% { width: 0%; }
+}
+.progress-container {
+  position: relative;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  margin-top: 1rem;
+  overflow: hidden;
+  display: none;
+}
+.progress-bar-animated {
+  position: absolute;
+  height: 100%;
+  width: 0%;
+  background-color: #0d6efd;
+  animation: loadProgress 5s infinite linear;
+}
+.rotating-messages {
+  display: none;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #6c757d;
+  margin-top: 0.5rem;
+}
+.spinner-border {
+  display: none; 
+}
+
+/* Remove or adjust these to bring form content higher */
+#uploadForm {
+  /* Originally: padding-top: 80px; margin-top: -80px; */
+  padding-top: 0;
+  margin-top: 0;
+}
+</style>
+</head>
+<body>
+
+<section class="hero-section text-center">
+  <div class="container">
+    <h1 class="hero-heading mb-3">Automatisk Vurderingsverktøy</h1>
+    <p class="hero-text mx-auto mb-4" style="max-width: 600px;">
+      Last opp og vurder elevbesvarelser med AI. Få en begrunnet karakter i Excel-format – raskt og effektivt.
+    </p>
+    <a href="#uploadForm" class="btn btn-primary btn-lg">Start vurdering</a>
+  </div>
+</section>
+
+<main class="container mt-5 mb-5">
+  <span id="uploadForm"></span>
+
+  <div class="mb-4">
+    <h2 class="mb-3"><i class="bi bi-info-circle me-2"></i>Slik fungerer det</h2>
+    <ul class="lh-lg mb-4">
+      <li>Velg trinn (8-10, VG1-VG3) og fag (Norsk eller Engelsk)</li>
+      <li>Last opp én eller flere elevbesvarelser (PDF eller TXT)</li>
+      <li>Klikk "Send inn" og vent på vurderingen</li>
+      <li>Last ned Excel-filen med karakterer og begrunnelser</li>
+      <li>Dette er en eksperimentell modell, du kan ikke stole på resultatet, men du kan bruke den som inspirasjon</li>
+    </ul>
+    <button class="btn btn-link p-0" type="button" data-bs-toggle="collapse" data-bs-target="#moreInstructions" aria-expanded="false" aria-controls="moreInstructions">
+      Mer detaljert forklaring
+    </button>
+    <div class="collapse mt-3" id="moreInstructions">
+      <div class="card card-body">
+        Verktøyet bruker kunstig intelligens til å lese og vurdere teksten i elevbesvarelsene.  
+        Jo flere og større filer du laster opp, jo lengre tid kan behandlingen ta.  
+        Så prosessen kan ta noen minutter. Verktøyet bruker Kompetansemålene til UDIR som rettesnor for karakterene og tilbakemelidingene.
+        Bare velg korrekt trinn og fag så vil de rette kompetansemålene bli brukt i evalueringen.
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="card-title mb-4"><i class="bi bi-file-earmark-text me-2"></i>Last opp og vurder</h2>
+      <form id="gradingForm" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="grade" class="form-label">Velg trinn:</label>
+          <select name="grade" id="grade" class="form-select" required>
+            <option value="8">8. trinn</option>
+            <option value="9">9. trinn</option>
+            <option value="10" selected>10. trinn</option>
+            <option value="11">VG1</option>
+            <option value="12">VG2</option>
+            <option value="13">VG3</option>
+          </select>
+          <small class="form-text text-muted">Velg aktuelt trinn.</small>
+        </div>
+
+        <div class="mb-3">
+          <label for="subject" class="form-label">Velg fag:</label>
+          <select name="subject" id="subject" class="form-select" required>
+            <option value="Norwegian" selected>Norsk</option>
+            <option value="English">Engelsk</option>
+          </select>
+          <small class="form-text text-muted">Velg faget for vurderingskriteriene.</small>
+        </div>
+
+        <div class="mb-3">
+          <label for="files" class="form-label">Last opp filer:</label>
+          <input type="file" name="files" id="files" multiple class="form-control" accept=".pdf,.txt">
+          <small class="text-muted">Du kan laste opp flere .txt eller .pdf-filer. Sørg for at teksten er lesbar.</small>
+        </div>
+
+        <div class="d-flex align-items-center">
+          <button type="submit" class="btn btn-primary me-3">Send inn</button>
+          <div class="spinner-border text-primary" role="status" id="loadingSpinner">
+            <span class="visually-hidden">Laster...</span>
+          </div>
+        </div>
+      </form>
+
+      <div class="progress-container mt-4" id="progressContainer">
+        <div class="progress-bar-animated" id="progressBar"></div>
+      </div>
+
+      <div class="rotating-messages" id="rotatingMessages"></div>
+      <div class="alert mt-4" role="alert" id="statusMessage"></div>
+      <div id="downloadLinkContainer" class="mt-4" style="display:none;">
+        <a id="downloadLink" href="#" class="btn btn-success"><i class="bi bi-download me-2"></i>Last ned resultater</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  let messages = [
+    "Analyserer tekst og henter ut relevant informasjon...",
+    "vurderer elevenes besvarelser opp mot UDIRs kompetansemål...",
+    "Jeg er mye bedre enn en lærer, lover...",
+    "Endelig kan du bruke mer tid på elevene!",
+    "Lærerne kan bare gå å legge seg, wallah!",
+    "Husk å alltid skjekke resultatene mine, jeg kan gjøre feil",
+    "Dette kan ta litt tid, gjerne kom tilbake  senere..."
+  ];
+
+  let messageIndex = 0;
+  let messageInterval = null;
+
+  const form = document.getElementById('gradingForm');
+  const spinner = document.getElementById('loadingSpinner');
+  const statusMessage = document.getElementById('statusMessage');
+  const progressContainer = document.getElementById('progressContainer');
+  const rotatingMessages = document.getElementById('rotatingMessages');
+  const downloadLinkContainer = document.getElementById('downloadLinkContainer');
+  const downloadLink = document.getElementById('downloadLink');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    startLoadingAnimation();
+
+    const formData = new FormData(form);
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        showError('Beklager, en feil oppstod under behandlingen av forespørselen');
+        return;
+      }
+
+      const blob = await response.blob();
+      stopLoadingAnimation();
+
+      statusMessage.style.display = 'block';
+      statusMessage.className = 'alert alert-success';
+      statusMessage.textContent = 'Vurderingen er fullført! Du kan nå laste ned resultatene';
+
+      const url = URL.createObjectURL(blob);
+      downloadLink.href = url;
+      downloadLink.download = 'grading_results.xlsx';
+      downloadLinkContainer.style.display = 'block';
+    } catch (error) {
+      showError('Nettverksfeil: ' + error.message);
+    }
+  });
+
+  function startLoadingAnimation() {
+    spinner.style.display = 'inline-block';
+    statusMessage.style.display = 'none';
+    statusMessage.textContent = '';
+    statusMessage.className = 'alert';
+    progressContainer.style.display = 'block';
+    rotatingMessages.style.display = 'block';
+
+    rotatingMessages.textContent = messages[messageIndex];
+    messageInterval = setInterval(() => {
+      messageIndex = (messageIndex + 1) % messages.length;
+      rotatingMessages.textContent = messages[messageIndex];
+    }, 5000);
+  }
+
+  function stopLoadingAnimation() {
+    spinner.style.display = 'none';
+    progressContainer.style.display = 'none';
+    rotatingMessages.style.display = 'none';
+    if (messageInterval) clearInterval(messageInterval);
+  }
+
+  function showError(msg) {
+    stopLoadingAnimation();
+    statusMessage.style.display = 'block';
+    statusMessage.className = 'alert alert-danger';
+    statusMessage.textContent = msg;
+  }
+</script>
+</body>
+</html>

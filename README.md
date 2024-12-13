@@ -35,7 +35,7 @@ Dette er en prototype på et vurderingsverktøy som bruker GPT-4o-mini og GPT-4o
 2. Backend:
    - Kompetansemål-database
    - System-prompt konfigurasjon
-   - GPT-4 integrasjon
+   - GPT-4o integrasjon
 
 3. Output:
    - JSON struktur med:

@@ -35,23 +35,39 @@ def extract_text_from_file(filepath: str) -> str:
         logger.error(f"Error extracting text from {filepath}: {e}", exc_info=True)
         return ""
 
-def load_context(grade: str, subject: str) -> str:
+def load_context(grade: str, subject: str, use_exam_context: bool = False) -> str:
     subject_lower = subject.lower()
     subject_dir = "norwegian" if subject_lower == 'norwegian' else "english"
+    contexts = []
 
+    # For grade 10 Norwegian, optionally load exam criteria
+    if grade == "10" and subject_dir == "norwegian" and use_exam_context:
+        exam_file = f"contexts/grade{grade}/{subject_dir}/NORSK_EKSAMEN_VURDERINGSKRITERIER.txt"
+        try:
+            if os.path.exists(exam_file):
+                with open(exam_file, "r", encoding="utf-8") as f:
+                    contexts.append(f.read())
+            else:
+                logger.warning(f"No exam criteria file found: {exam_file}")
+        except Exception as e:
+            logger.error(f"Error loading exam criteria file: {e}", exc_info=True)
+
+    # Load regular criteria
     if subject_dir == "norwegian":
-        context_file = f"contexts/grade{grade}/{subject_dir}/NORSK_VURDERINGSKRITERIER.txt"
+        criteria_file = f"contexts/grade{grade}/{subject_dir}/NORSK_VURDERINGSKRITERIER.txt"
     else:
-        context_file = f"contexts/grade{grade}/{subject_dir}/ENGELSK_VURDERINGSKRITERIER.txt"
+        criteria_file = f"contexts/grade{grade}/{subject_dir}/ENGELSK_VURDERINGSKRITERIER.txt"
 
     try:
-        if not os.path.exists(context_file):
+        if not os.path.exists(criteria_file):
             logger.warning(f"No criteria file found for grade: {grade}, subject: {subject}")
             return "No criteria found for this grade and subject."
-        with open(context_file, "r", encoding="utf-8") as f:
-            return f.read()
+        with open(criteria_file, "r", encoding="utf-8") as f:
+            contexts.append(f.read())
+
+        return "\n\n".join(contexts)
     except Exception as e:
-        logger.error(f"Error loading context file {context_file}: {e}", exc_info=True)
+        logger.error(f"Error loading context file {criteria_file}: {e}", exc_info=True)
         return "Error loading criteria."
 
 @app.route('/', methods=['GET', 'POST'])
@@ -59,8 +75,9 @@ def index():
     if request.method == 'POST':
         selected_grade = request.form.get('grade', '10').strip()
         selected_subject = request.form.get('subject', 'Norwegian').strip()
+        use_exam_context = request.form.get('useExamContext') == 'on'
 
-        context = load_context(selected_grade, selected_subject)
+        context = load_context(selected_grade, selected_subject, use_exam_context)
         files = request.files.getlist("files")
 
         upload_folder = "uploaded_files"

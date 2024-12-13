@@ -31,7 +31,7 @@ def grade_answer(student_answer: str, curriculum_context: str):
 
     # Log the entire request being sent to OpenAI
     logger.debug("Sending request to OpenAI API with the following parameters:")
-    logger.debug("Model: gpt-4o-mini")
+    logger.debug("Model: gpt-4o")
     logger.debug("Messages: %s", json.dumps(messages, indent=2))
     logger.debug("Response format and other parameters: response_format=json_schema, temperature=0.5, max_tokens=7000")
 
@@ -93,7 +93,7 @@ def grade_answers_in_parallel(items, context, max_workers=1):
             return [filename, subject, "N/A", f"Error during grading: {str(e)}", "N/A"]
 
     results = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=7) as executor:
         futures = [executor.submit(process_item, i) for i in items]
         for future in concurrent.futures.as_completed(futures):
             res = future.result()

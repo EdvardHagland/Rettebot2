@@ -66,3 +66,4 @@ Systemet er i prototype-fase:
 3. Integrere vurderingsmatriser
 4. Validere mot historiske data
 5. Optimalisere prompts basert på testresultater
+6. Erstatte lokal database av kompetansemål med en dynamisk loading a gjennom UDIRs Grep API
